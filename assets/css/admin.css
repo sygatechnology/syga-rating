@@ -1,0 +1,37 @@
+.syga-fields-form-container{
+    position: relative;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    margin-bottom: 20px;
+    padding: 0.5rem;
+    line-height: 1;
+}
+.align-right{
+    text-align: right !important;
+}
+.syga-remove-fields-form-container{
+    margin-bottom: 0.5rem;
+}
+.syga-fields-form-group{
+    position: relative;
+}
+.syga-fields-form-group table{
+    width: 100%;
+}
+.syga-fields-form-group table td.syga-field-title{
+    padding-bottom: 1rem;
+}
+.syga-fields-form-group table td label{
+    display: block;
+    position: relative;
+    margin-bottom: 5px;
+}
+.syga-fields-form-group table td input{
+    width: 100%;
+}
+.syga-fields-form-group table td.syga-field-min{
+    padding-right: 1.5rem;
+}
+.syga-fields-form-group table td.syga-field-max{
+    padding-left: 1.5rem;
+}
