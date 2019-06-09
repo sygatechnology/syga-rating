@@ -88,14 +88,9 @@ class SygaRating
 
 	function __construct()
 	{
-        if(class_exists('SYTemplates')){
-            $this->sytemplates = new SYTemplates();
-        } else {
-            wp_die("L'objet class SYTemplates de l'extension Syga Rating n'existe pas.", "Syga Rating plugin Error");
-        }
-
-        if(class_exists('SYApi')){
-            $this->syapi = new SYApi();
+        global $sytemplates;
+        if(isset($sytemplates)){
+            $this->sytemplates = $sytemplates;
         } else {
             wp_die("L'objet class SYTemplates de l'extension Syga Rating n'existe pas.", "Syga Rating plugin Error");
         }
@@ -106,7 +101,14 @@ class SygaRating
         } else {
             wp_die("L'objet class SYHelpers de l'extension Syga Rating n'existe pas.", "Syga Rating plugin Error");
         }
-        
+
+        global $syapi;
+        if(isset($syapi)){
+            $this->syapi = $syapi;
+        } else {
+            wp_die("L'objet class SYApi de l'extension Syga Rating n'existe pas dans le fichier syga-rating.php.", "Syga Rating plugin Error");
+        }
+
 		// vars
         $this->dir = plugins_url( '', __FILE__ );
         $this->url = plugin_dir_url( __FILE__ );
@@ -133,9 +135,11 @@ class SygaRating
 
     function add_actions(){
         add_action( 'init', array($this, 'syga_rating_register_post_types') );
+        add_action( 'wp_enqueue_scripts', array($this, 'syga_rating_frontend_enqueue'));
         add_action( 'admin_init', array($this, 'syga_rating_backend_enqueue') );
         add_action( 'admin_init', array($this, 'syga_rating_add_post_meta_boxes') );
-        add_action( 'save_post_syga_rating', array($this, 'save_syga_rating'), 10, 3 );
+        add_action( 'save_post', array($this, 'save_syga_rating'), 10, 3 );
+        add_action( 'after_delete_post', array($this, 'delete_syga_rating'), 10, 3 );
     }
 
     function syga_rating_register_post_types(){
@@ -179,11 +183,28 @@ class SygaRating
         register_post_type( 'syga_rating', $args );
     }
 
-    function syga_rating_backend_enqueue(){
-        wp_register_style( 'syga_rating_admin_styles', $this->dir . '/assets/css/admin.css' );
-        wp_enqueue_style( 'syga_rating_admin_styles' );
+    function syga_rating_frontend_enqueue(){
+        wp_enqueue_style( 'syga-ionRangeSlider-frontend-styles', $this->dir . '/assets/css/plugins/ionRangeSlider/ion.rangeSlider.css', __FILE__ , '1.0.0' );
+        wp_enqueue_style( 'syga-ionRangeSlider-skin-frontend-styles', $this->dir . '/assets/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css', __FILE__ , '1.0.0' );
+        wp_enqueue_style( 'syga-frontend-styles', $this->dir . '/assets/css/syga-frontend.css' , __FILE__ , '1.0.0' );
 
+        wp_enqueue_script( 'syga-jquery-frontend-js', plugins_url( '/assets/js/plugins/jquery-2.1.1.js', __FILE__ ), '1.0.0' );
+        wp_enqueue_script( 'syga-ionRangeSlider-frontend-js', plugins_url( '/assets/js/plugins/ionRangeSlider/ion.rangeSlider.min.js', __FILE__ ), '1.0.0' );
+        wp_enqueue_script( 'syga-frontend-js', plugins_url( '/assets/js/syga-frontend.js', __FILE__ ), '1.0.0' );
+
+        $params = array(
+            'ajaxurl' => plugins_url( 'ajax-request.php', __FILE__ )
+        );
+        wp_localize_script( 'syga-frontend-js', 'syga_params', $params );
+        
+        wp_enqueue_script( 'syga-frontend-ajax-js', $this->url . 'assets/js/syga-ajax-frontend.js', array( 'jquery' ), '1.0.0', true );
+        add_action( 'wp_ajax_syga_rating_load_comment_form', array($this, 'syga_rating_load_comment_form') );
+    }
+
+    function syga_rating_backend_enqueue(){
+        wp_enqueue_style( 'syga-backend-styles', $this->dir . '/assets/css/syga-backend.css' );
         wp_enqueue_script('syga-backend-js',  $this->url . 'assets/js/syga-backend.js', __FILE__, '1.0.0' );
+
         wp_enqueue_script( 'syga-backend-ajax-js', $this->url . 'assets/js/syga-ajax-backend.js', array( 'jquery' ), '1.0.0', true );
         add_action( 'wp_ajax_syga_rating_load_fields_form', array($this, 'syga_rating_load_fields_form') );
     }
@@ -206,7 +227,7 @@ class SygaRating
             'formpage' => (isset($_GET['action']) && $_GET['action'] == 'edit') ? 'edit' : 'new'
         );
         global $post;
-        $rates = $this->syapi->get_rates_list($post->ID);
+        $rates = $this->syapi->get_rates($post->ID);
         if(count($rates) == 0){
             $params['formpage'] = 'new';
         }
@@ -218,6 +239,14 @@ class SygaRating
         if(isset($_POST['syga_rating_input']) && isset($_POST['sygahiddenaction'])){
             $this->syapi->save_rates($post_id, $_POST['syga_rating_input'], $_POST['sygahiddenaction']);
         }
+    }
+
+    function delete_syga_rating($post_id){
+        $this->syapi->delete_rates($post_id);
+    }
+
+    function syga_rating_load_comment_form(){
+        $this->sytemplates->load_comment_form();
     }
 
     function syga_rating_load_fields_form(){

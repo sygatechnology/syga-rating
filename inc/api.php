@@ -7,6 +7,12 @@
  * 
  * @since	1.0.0
  */
+
+global $syhelpers;
+if(!isset($syhelpers)){
+    require_once plugin_dir_path( __FILE__ ) . '../inc/helpers.php';
+}
+
 class SYApi
 {
     function __construct()
@@ -15,25 +21,29 @@ class SYApi
         if(isset($syhelpers)){
             $this->syhelpers = $syhelpers;
         } else {
-            wp_die("L'objet class SYHelpers de l'extension Syga Rating n'existe pas.", "Syga Rating plugin Error");
+            wp_die("L'objet class SYHelpers de l'extension Syga Rating n'existe pas dans le fichier inc/api.php.", "Syga Rating plugin Error");
         }
     }
 
     public function save_rates($post_id, $rates, $action){
         $syga_rating_input_reindexed = [];
-        foreach($rates as $input){
+        foreach($rates as $index => $input){
             if( $action == 'new' ){
                 $input['values'] = [];
             } else if( $action == 'edit' ) {
                 $input['values'] = ( $input['values'] == 'syinit' ) ? [] : $this->syhelpers->_unserialize($input['values']);
             }
-            $syga_rating_input_reindexed[] = $input;
+            $syga_rating_input_reindexed[$index] = $input;
         }
         $syga_rating_input = $this->syhelpers->_serialize($syga_rating_input_reindexed);
         update_post_meta($post_id, "_rates", $syga_rating_input);
     }
 
-    public function get_rates_list($post_id){
+    public function delete_rates($post_id){
+        delete_post_meta($post_id, "_rates");
+    }
+
+    public function get_rates($post_id){
         $rates = get_post_custom($post_id);
         if(isset($rates['_rates'])){
             $rates_serialized = $this->syhelpers::_unserialize($rates['_rates'][0]);
@@ -44,7 +54,13 @@ class SYApi
         return $rates;
     }
 
-    public function get_rates($post_id){
+    public function is_registered_post_type($post_type){
+        // A vérifier si le type du poste est lié au système Syga Rating
+        // Mais pour le moment il n'est possible de la'afficher que sur un poste du type syga_rating
+        return ( $post_type == 'syga_rating' ) ? TRUE : FALSE;
+    }
+
+    public function get_post_rates($post_id){
         $rates = [];
         $post_custom = get_post_custom($post_id);
         if(isset($post_custom['_rates'])){
@@ -56,7 +72,9 @@ class SYApi
                     'title' => $rate['title'],
                     'number' => count($values),
                     'average' => $this->get_average($values),
-                    'has_commented' => $this->is_user_has_commented(get_current_user_id(), $values)
+                    'has_commented' => $this->is_user_has_commented(get_current_user_id(), $values),
+                    'min' => $rate['min'],
+                    'max' => $rate['max']
                 );
             }
         }
@@ -82,3 +100,6 @@ class SYApi
         return (bool) in_array( $user_id, $users );
     }
 }
+
+global $syapi;
+$syapi = new SYApi();

@@ -1,0 +1,49 @@
+.syga-rate-title{
+    margin: 0 0 1em;
+    padding: 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #d6d6d6;
+    font-weight: 400;
+}
+form.syga-rating-form{
+    position: relative;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    margin-bottom: 12px;
+    padding: 0.5rem;
+    line-height: 1;
+}
+.irs-slider.single{
+   cursor: pointer;
+}
+.syga-textarea-container{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.syga-textarea-container textarea {
+    font-size: 0.8rem;
+    line-height: 1;
+    width: 100%;
+}
+.syga-textarea-container textarea::placeholder {
+    color: #ccc;
+}
+.syga-button-submit-container{
+    text-align: right;
+}
+.syga-button-submit-container button {
+    background-color: #ed5565;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.5em 1.5em;
+    -webkit-transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
+    white-space: nowrap;
+}

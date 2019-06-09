@@ -7,6 +7,12 @@
  * 
  * @since	1.0.0
  */
+
+global $syapi;
+if(!isset($syapi)){
+    require_once plugin_dir_path( __FILE__ ) . '../inc/api.php';
+}
+
 class SYTemplates
 {
     /**
@@ -23,10 +29,11 @@ class SYTemplates
     
     function __construct()
 	{
-        if(class_exists('SYApi')){
-            $this->syapi = new SYApi();
+        global $syapi;
+        if(isset($syapi)){
+            $this->syapi = $syapi;
         } else {
-            wp_die("L'objet class SYApi de l'extension Syga Rating n'existe pas.", "Syga Rating plugin Error");
+            wp_die("L'objet class SYApi de l'extension Syga Rating n'existe pas dans le fichier inc/templates.php.", "Syga Rating plugin Error");
         }
 
         global $syhelpers;
@@ -140,3 +147,6 @@ class SYTemplates
     }
 
 }
+
+global $sytemplates;
+$sytemplates = new SYTemplates();
