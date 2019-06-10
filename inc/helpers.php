@@ -58,6 +58,20 @@ class SYHelpers
 global $syhelpers;
 $syhelpers = new SYHelpers();
 
+if(!function_exists('sy_style')){
+    function sy_style( $handle, $src, $ver = false, $media = 'all' ) {
+        $href = $ver ? $src.'?ver='.$ver : $src;
+        echo "<link rel='stylesheet' id='".$handle."-css'  href='".$href."' type='text/css' media='".$media."' />";
+    }
+}
+
+if(!function_exists('sy_script')){
+    function sy_script( $handle, $src, $ver = false ) {
+        $href = $ver ? $src.'?ver='.$ver : $src;
+        echo "<script id='".$handle."' type='text/javascript' src='".$href."'></script>";
+    }
+}
+
 if(!class_exists('SYApi')){
     require_once plugin_dir_path( __FILE__ ) . '../inc/api.php';
 }
@@ -101,10 +115,17 @@ if(!function_exists('get_rates')){
     }
 }
 
-if(!function_exists('syga_rating_template')){
-    function syga_rating_template( $attr_class = NULL ){
+if(!function_exists('syga_rating_frame')){
+    function syga_rating_frame( $attr_class = NULL ){
         global $sytemplates;
-        echo $sytemplates->syga_rating_template( $attr_class );
+        echo $sytemplates->syga_rating_frame( $attr_class );
+    }
+}
+
+if(!function_exists('syga_rating_template')){
+    function syga_rating_template( $post_id ){
+        global $sytemplates;
+        echo $sytemplates->syga_rating_template( $post_id );
     }
 }
 

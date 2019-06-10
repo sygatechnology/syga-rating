@@ -135,7 +135,7 @@ class SygaRating
 
     function add_actions(){
         add_action( 'init', array($this, 'syga_rating_register_post_types') );
-        add_action( 'wp_enqueue_scripts', array($this, 'syga_rating_frontend_enqueue'));
+        //add_action( 'wp_enqueue_scripts', array($this, 'syga_rating_frontend_enqueue'));
         add_action( 'admin_init', array($this, 'syga_rating_backend_enqueue') );
         add_action( 'admin_init', array($this, 'syga_rating_add_post_meta_boxes') );
         add_action( 'save_post', array($this, 'save_syga_rating'), 10, 3 );

@@ -59,7 +59,7 @@ function syga_save_rate(action, post_id, index, note, comment){
 			"comment" : comment
 		},
 		success: function( form ){
-			$( '#syga-rating-container' ).html( form );
+			$( '#syga-rating-list-container' ).html( form );
 		}
 	});
 }

@@ -146,19 +146,23 @@ class SYTemplates
         return $buffer;
     }
 
-    public function syga_rating_template( $attr_class = NULL ){
-        global $post, $syapi;
+    public function syga_rating_frame( $attr_class = '' ){
+        global $post;
+        return '<iframe width="100%" id="syga-rating-frame" class="'.$attr_class.'" src="'.plugins_url( '../syga-rating-list-content.php?post_id='.$post->ID, __FILE__ ).'" frameborder="0"></iframe>';
+    }
 
-        if ( !(is_single() || is_page()) || empty($post) )
+    public function syga_rating_template( $post_id ){
+        global $post, $syapi;
+        $post = !isset( $post ) ? get_post( $post_id ) : $post;
+
+        if ( empty($post) )
             return;
             
         if($syapi->is_registered_post_type($post->post_type)){
             $rates = $syapi->get_post_rates($post->ID);
             $vars = array(
                 'post_id' => $post->ID,
-                'rates' => $rates,
-                'id' => !is_null($attr_id) ? $attr_id : '',
-                'class' => !is_null($attr_class) ? $attr_class : ''
+                'rates' => $rates
             );
             return $this->load(plugin_dir_path( __FILE__ ) . '../templates/rating-template.php', $vars);
         }

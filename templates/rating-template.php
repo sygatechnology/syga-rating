@@ -1,4 +1,4 @@
-<div id="syga-rating-container" class="<?php echo $class; ?>">
+<div id="syga-rating-list-container" class="syga-rating-list-container">
     <div class="syga-rating-list-title">
         <h3>Avis</h3>
     </div>
@@ -8,7 +8,9 @@
                 <th>Sujet</th>
                 <th>Nombre d'avis</th>
                 <th>Note moyenne</th>
-                <th></th>
+                <?php if(is_user_logged_in()) { ?>
+                    <th></th>
+                <?php } ?>
             </tr>
         </thead>
         <tbody>
@@ -17,9 +19,11 @@
                 <td><?php echo $rate->title; ?></td>
                 <td id="syga-number-<?php echo $index; ?>"><?php echo $rate->number; ?></td>
                 <td id="syga-average-<?php echo $index; ?>"><?php echo $rate->average.'/'.$rate->max; ?></td>
-                <td id="syga-has-commented-<?php echo $index; ?>">
-                    <?php echo ($rate->has_commented) ? 'OK' : '<a data-index="'.$index.'" data-min="'.$rate->min.'" data-max="'.$rate->max.'" data-title="'.$rate->title.'" href="javascript:void(0);" id="syga-rate-'.$index.'" onclick="syga_load_comment_form('.$post_id.', '.$index.');">Mon avis</a>'; ?>
-                </td>
+                <?php if(is_user_logged_in()) { ?>
+                    <td id="syga-has-commented-<?php echo $index; ?>">
+                        <?php echo ($rate->has_commented) ? 'OK' : '<a data-index="'.$index.'" data-min="'.$rate->min.'" data-max="'.$rate->max.'" data-title="'.$rate->title.'" href="javascript:void(0);" id="syga-rate-'.$index.'" onclick="syga_load_comment_form('.$post_id.', '.$index.');">Mon avis</a>'; ?>
+                    </td>
+                <?php } ?>
             </tr>
         <?php } ?>
         </tbody>
