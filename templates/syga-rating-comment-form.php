@@ -7,10 +7,10 @@
             <input type="hidden" name="index" value="<?php echo $index; ?>" />
             <input type="number" min="<?php echo $min; ?>" max="<?php echo $max; ?>" id="syra-ionrange-<?php echo $index; ?>" name="note" value="<?php echo $min; ?>" />
             <div class="syga-textarea-container">
-                <textarea name="comment" placeholder="Une remarque sur la note que vous donnez?" class="syga-rating-comment-input" maxlength="65525"></textarea>
+                <textarea name="comment" placeholder="Une remarque sur la note que vous donnez?" class="form-control" maxlength="65525"></textarea>
             </div>
             <div class="syga-button-submit-container">
-                <button type="button" class="syga-rating-submit-button">Envoyer</button>
+                <button type="button" class="btn btn-w-m btn-info">Envoyer</button>
             </div>
         </form>
     </td>
