@@ -9,8 +9,8 @@
             <div class="syga-textarea-container">
                 <textarea name="comment" placeholder="Une remarque sur la note que vous donnez?" class="form-control" maxlength="65525"></textarea>
             </div>
-            <div class="syga-button-submit-container">
-                <button type="button" class="btn btn-w-m btn-info">Envoyer</button>
+            <div class="text-right">
+                <button type="button" class="btn btn-w-m btn-info syga-rating-submit-button">Envoyer</button>
             </div>
         </form>
     </td>

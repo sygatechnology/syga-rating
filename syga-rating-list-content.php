@@ -35,24 +35,19 @@
                 sy_style( 'syga-ionRangeSlider-frontend-styles', plugins_url( '/assets/css/plugins/ionRangeSlider/ion.rangeSlider.css', __FILE__ ), '1.0.0' );
                 sy_style( 'syga-ionRangeSlider-skin-frontend-styles', plugins_url( '/assets/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css', __FILE__ ), '1.0.0' );
                 sy_style( 'syga-frontend-styles', plugins_url( '/assets/css/syga-frontend.css' , __FILE__ ), '1.0.0' );
-
-                sy_script( 'syga-jquery-frontend-js', plugins_url( '/assets/js/plugins/jquery-2.1.1.js', __FILE__ ), '1.0.0' );
-                sy_script( 'syga-ionRangeSlider-frontend-js', plugins_url( '/assets/js/plugins/ionRangeSlider/ion.rangeSlider.min.js', __FILE__ ), '1.0.0' );
-                sy_script( 'syga-frontend-js', plugins_url( '/assets/js/syga-frontend.js', __FILE__ ), '1.0.0' );
-
             ?>
+        </head>
+        <body>
             <script type="text/javascript">
                 var syga_params = {
                     "ajaxurl" : "<?php echo plugins_url( 'ajax-request.php', __FILE__ ); ?>"
                 };
             </script>
+            <?php
+                sy_script( 'syga-jquery-frontend-js', plugins_url( '/assets/js/plugins/jquery-2.1.1.js', __FILE__ ), '1.0.0' );
+                sy_script( 'syga-ionRangeSlider-frontend-js', plugins_url( '/assets/js/plugins/ionRangeSlider/ion.rangeSlider.min.js', __FILE__ ), '1.0.0' );
+                sy_script( 'syga-frontend-js', plugins_url( '/assets/js/syga-frontend.js', __FILE__ ), '1.0.0' );
             
-            <?php
-                sy_script( 'syga-frontend-ajax-js', plugins_url( 'assets/js/syga-ajax-frontend.js', __FILE__), '1.0.0' );
-            ?>
-        </head>
-        <body>
-            <?php
                 syga_rating_template( $_GET['post_id'] );
             ?>
         </body>

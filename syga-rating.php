@@ -135,7 +135,7 @@ class SygaRating
 
     function add_actions(){
         add_action( 'init', array($this, 'syga_rating_register_post_types') );
-        //add_action( 'wp_enqueue_scripts', array($this, 'syga_rating_frontend_enqueue'));
+        add_action( 'wp_enqueue_scripts', array($this, 'syga_rating_iframe_frontend_enqueue'));
         add_action( 'admin_init', array($this, 'syga_rating_backend_enqueue') );
         add_action( 'admin_init', array($this, 'syga_rating_add_post_meta_boxes') );
         add_action( 'save_post', array($this, 'save_syga_rating'), 10, 3 );
@@ -183,22 +183,8 @@ class SygaRating
         register_post_type( 'syga_rating', $args );
     }
 
-    function syga_rating_frontend_enqueue(){
-        wp_enqueue_style( 'syga-ionRangeSlider-frontend-styles', $this->dir . '/assets/css/plugins/ionRangeSlider/ion.rangeSlider.css', __FILE__ , '1.0.0' );
-        wp_enqueue_style( 'syga-ionRangeSlider-skin-frontend-styles', $this->dir . '/assets/css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css', __FILE__ , '1.0.0' );
-        wp_enqueue_style( 'syga-frontend-styles', $this->dir . '/assets/css/syga-frontend.css' , __FILE__ , '1.0.0' );
-
-        wp_enqueue_script( 'syga-jquery-frontend-js', plugins_url( '/assets/js/plugins/jquery-2.1.1.js', __FILE__ ), '1.0.0' );
-        wp_enqueue_script( 'syga-ionRangeSlider-frontend-js', plugins_url( '/assets/js/plugins/ionRangeSlider/ion.rangeSlider.min.js', __FILE__ ), '1.0.0' );
-        wp_enqueue_script( 'syga-frontend-js', plugins_url( '/assets/js/syga-frontend.js', __FILE__ ), '1.0.0' );
-
-        $params = array(
-            'ajaxurl' => plugins_url( 'ajax-request.php', __FILE__ )
-        );
-        wp_localize_script( 'syga-frontend-js', 'syga_params', $params );
-        
-        wp_enqueue_script( 'syga-frontend-ajax-js', $this->url . 'assets/js/syga-ajax-frontend.js', array( 'jquery' ), '1.0.0', true );
-        add_action( 'wp_ajax_syga_rating_load_comment_form', array($this, 'syga_rating_load_comment_form') );
+    function syga_rating_iframe_frontend_enqueue(){
+        wp_enqueue_style( 'syga-ionRangeSlider-iframe-frontend-styles', $this->dir . '/assets/css/iframe-frontend.css', __FILE__ , '1.0.0' );
     }
 
     function syga_rating_backend_enqueue(){
@@ -243,10 +229,6 @@ class SygaRating
 
     function delete_syga_rating($post_id){
         $this->syapi->delete_rates($post_id);
-    }
-
-    function syga_rating_load_comment_form(){
-        $this->sytemplates->load_comment_form();
     }
 
     function syga_rating_load_fields_form(){

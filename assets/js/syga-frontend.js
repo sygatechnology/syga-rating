@@ -1,3 +1,12 @@
+$( document ).ready(function(){
+	set_iframe_height();
+});
+
+function set_iframe_height(){
+	var rating_list_container_height = $( '#syga-rating-list-container').height();
+	$( $( window )[0].frameElement ).css( 'height', rating_list_container_height-36 );
+}
+
 function syga_load_comment_form(post_id, index){
 	var element = $( '#syga-rate-'+index );
 	var index = $(element).data('index');
@@ -31,6 +40,7 @@ function syga_show_ion_range_slider(post_id, index, min, max, title){
 				hasGrid: true
 			});
 			syga_before_save_rate();
+			set_iframe_height();
 		}
 	});
 }
@@ -42,8 +52,8 @@ function syga_before_save_rate(){
 		var post_id = $( form ).find( 'input[name="post_id"]').val();
 		var index = $( form ).find( 'input[name="index"]').val();
 		var note = $( form ).find( 'input[name="note"]').val();
-		var comment = $( form ).find( 'input[name="comment"]').val();
-		syga_save_rate(action, post_id, index, note, comment)
+		var comment = $( form ).find( 'textarea[name="comment"]').val();
+		syga_save_rate(action, post_id, index, note, comment);
 	});
 }
 
@@ -60,11 +70,7 @@ function syga_save_rate(action, post_id, index, note, comment){
 		},
 		success: function( form ){
 			$( '#syga-rating-list-container' ).html( form );
+			set_iframe_height();
 		}
 	});
-}
-
-function syga_after_save_rate(){
-	$( '#syga-rating-form-tr-'+index ).remove();
-	$( '#syga-rating-tr-'+index ).show();
 }
