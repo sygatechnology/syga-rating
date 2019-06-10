@@ -58,8 +58,8 @@ function syga_save_rate(action, post_id, index, note, comment){
 			"note" : note,
 			"comment" : comment
 		},
-		success: function( data ){
-			$( '#syga-rating-container' ).html( data );
+		success: function( form ){
+			$( '#syga-rating-container' ).html( form );
 		}
 	});
 }

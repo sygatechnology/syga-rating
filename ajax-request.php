@@ -32,6 +32,11 @@
         require_once 'inc/helpers.php';
     }
 
+    global $syapi;
+    if( !isset($syapi) ){
+        require_once 'inc/api.php';
+    }
+
     $action = isset($_POST['action']) ? $_POST['action'] : $_GET['action'];
 
     if( $action == 'comment-form' ){
@@ -46,13 +51,8 @@
     }
 
     if( $action == 'add-comment' ){
-        $vars = array(
-            'post_id' => $_POST['post_id'],
-            'index' => $_POST['index'],
-            'note' => $_POST['note'],
-            'comment' => $_POST['comment']
-        );
-        syga_rating_reload_template();
+        $post = $syapi->add_user_note($_POST['post_id'], $_POST['index'], $_POST['note'], $_POST['comment']);
+        syga_rating_reload_template($post);
     }
 
 ?>

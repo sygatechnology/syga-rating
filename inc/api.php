@@ -61,22 +61,18 @@ class SYApi
     }
 
     public function get_post_rates($post_id){
+        $registered_rates = $this->get_rates($post_id);
         $rates = [];
-        $post_custom = get_post_custom($post_id);
-        if(isset($post_custom['_rates'])){
-            $post_custom_serialized = $this->syhelpers::_unserialize($post_custom['_rates'][0]);
-            $rates_custom = $this->syhelpers::_unserialize($post_custom_serialized);
-            foreach( $rates_custom as $rate ){
-                $values = (array)$rate['values'];
-                $rates[] = (object) array(
-                    'title' => $rate['title'],
-                    'number' => count($values),
-                    'average' => $this->get_average($values),
-                    'has_commented' => $this->is_user_has_commented(get_current_user_id(), $values),
-                    'min' => $rate['min'],
-                    'max' => $rate['max']
-                );
-            }
+        foreach( $registered_rates as $rate ){
+            $values = (array)$rate['values'];
+            $rates[] = (object) array(
+                'title' => $rate['title'],
+                'number' => count($values),
+                'average' => $this->get_average($values),
+                'has_commented' => $this->is_user_has_commented(get_current_user_id(), $values),
+                'min' => $rate['min'],
+                'max' => $rate['max']
+            );
         }
         return $rates;
     }
@@ -98,6 +94,22 @@ class SYApi
             $users[] = $value['user'];
         }
         return (bool) in_array( $user_id, $users );
+    }
+
+    public function add_user_note( $post_id, $index, $note, $comment ){
+        $registered_rates = $this->get_rates($post_id);
+        $registered_rates[ $index ][ 'values' ][] = array(
+            'user' => get_current_user_id(),
+            'note' => $note,
+            'comment' => $comment
+        );
+        return $this->update_rates( $post_id, $registered_rates);
+    }
+
+    protected function update_rates( $post_id, $rates ){
+        $syga_rating_input = $this->syhelpers->_serialize($rates);
+        update_post_meta($post_id, "_rates", $syga_rating_input);
+        return get_post($post_id);
     }
 }
 
