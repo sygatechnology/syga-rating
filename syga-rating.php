@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Syga Rating
- * Plugin URI:  https://syga.mg/wordpress/plugins/syga-rating/
+ * Plugin URI:  https://github.com/sygatechnology/syga-rating
  * Description: Système de classement des articles ou autres
  * Version:     1.0.0
  * Author:      B.Clash
@@ -121,6 +121,7 @@ class SygaRating
     function init(){
         $this->register_hooks();
         $this->add_actions();
+        $this->add_filters();
     }
 
     function register_hooks(){
@@ -130,11 +131,19 @@ class SygaRating
 
 	function syga_rating_activate_flush_rewrite()
 	{
+        add_action( 'admin_notices', 'syga_rating_settings_notice' );
 		flush_rewrite_rules();
+    }
+
+    function syga_rating_settings_notice(){
+        echo $this->sytemplates->load(
+            plugin_dir_path( __FILE__ ) . 'templates/settings-notice.php'
+        );
     }
 
     function add_actions(){
         add_action( 'init', array($this, 'syga_rating_register_post_types') );
+        add_action( 'admin_menu', array($this, 'syga_rating_register_options_page') );
         add_action( 'wp_enqueue_scripts', array($this, 'syga_rating_iframe_frontend_enqueue'));
         add_action( 'admin_init', array($this, 'syga_rating_backend_enqueue') );
         add_action( 'admin_init', array($this, 'syga_rating_add_post_meta_boxes') );
@@ -181,6 +190,25 @@ class SygaRating
         );
 
         register_post_type( 'syga_rating', $args );
+    }
+
+    function syga_rating_register_options_page(){
+        add_options_page('Options Syga Rating', 'Syga rating', 'manage_options', 'syga-rating', array($this, 'syga_rating_options_page') );
+    }
+
+    function syga_rating_options_page(){
+        echo $this->sytemplates->load(
+            plugin_dir_path( __FILE__ ) . 'templates/settings.php'
+        );
+    }
+
+    function add_filters(){
+        add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array($this, 'syga_rating_action_links') );
+    }
+
+    function syga_rating_action_links( $links ){
+        $links[] = '<a href="'. esc_url( get_admin_url(null, 'options-general.php?page=syga-rating') ) .'">Paramètres</a>';
+        return $links;
     }
 
     function syga_rating_iframe_frontend_enqueue(){
