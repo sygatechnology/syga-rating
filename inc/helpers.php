@@ -115,8 +115,8 @@ if(!function_exists('get_rates')){
     }
 }
 
-if(!function_exists('syga_rating_frame')){
-    function syga_rating_frame( $attr_class = NULL ){
+if(!function_exists('syga_rating_comment_frame')){
+    function syga_rating_comment_frame( $attr_class = NULL ){
         global $sytemplates;
         echo $sytemplates->syga_rating_frame( $attr_class );
     }
