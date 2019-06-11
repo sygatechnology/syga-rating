@@ -97,7 +97,7 @@ class SYTemplates
         <input type="hidden" name="sygahiddenaction" value="<?php echo $action; ?>">
 <?php
             foreach($rates as $position => $rate){
-                echo $this->load( plugin_dir_path( __FILE__ ) . '../templates/edit-fields-form.php', array(
+                echo $this->load( plugin_dir_path( __FILE__ ) . '../templates/fields-form.php', array(
                     'position' => $position,
                     'rate' => $rate
                 ));
@@ -115,7 +115,7 @@ class SYTemplates
             return;
         }
         ob_start();
-        include( plugin_dir_path( __FILE__ ) . '../templates/edit-fields-form.php' );
+        include( plugin_dir_path( __FILE__ ) . '../templates/fields-form.php' );
         $buffer = ob_get_contents();
         @ob_end_clean();
         return $buffer;
@@ -129,8 +129,14 @@ class SYTemplates
         $response = new WP_Ajax_Response;
 
         $response->add( array(
-            'data'	=> $this->load(plugin_dir_path( __FILE__ ) . '../templates/new-fields-form.php', array(
-                'position' => $position
+            'data'	=> $this->load(plugin_dir_path( __FILE__ ) . '../templates/fields-form.php', array(
+                'position' => $_REQUEST['pos'],
+                'rate' => array(
+                    'title' => '',
+                    'min' => 1,
+                    'max' => 10,
+                    'values' => []
+                )
             ))
         ));
 

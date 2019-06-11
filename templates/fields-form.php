@@ -1,7 +1,7 @@
 <div class="syga-fields-form-container" id="syga-fields-form-<?php echo $position; ?>">
     <input type="hidden" class="syga-fields-position" value="<?php echo $position; ?>">
     <div class="syga-remove-fields-form-container align-right">
-        <a href="javascript:void(0);" onclick="syga_remove_fields_form_<?php echo $position; ?>();" class="syga-remove-fields-form-button" data-position="<?php echo $position; ?>">Supprimer</a>
+        <a href="javascript:void(0);" onclick="syga_remove_fields_form_<?php echo $position; ?>();" class="syga-remove-fields-form-button" data-position="'.$position.'">Supprimer</a>
     </div>
     <div class="syga-fields-form-group">
         <table>
@@ -11,7 +11,7 @@
                         <label for="syga_rating_input[<?php echo $position; ?>][title]">
                             Titre
                         </label>
-                        <input type="text" name="syga_rating_input[<?php echo $position; ?>][title]" id="syga_rating_input[<?php echo $position; ?>][title]">
+                        <input type="text" name="syga_rating_input[<?php echo $position; ?>][title]" id="syga_rating_input[<?php echo $position; ?>][title]" value="<?php echo $rate['title']; ?>">
                     </td>
                 </tr>
                 <tr>
@@ -19,16 +19,15 @@
                         <label for="syga_rating_input[<?php echo $position; ?>][min]">
                             Valeur minimale
                         </label>
-                        <input type="text" name="syga_rating_input[<?php echo $position; ?>][min]" id="syga_rating_input[<?php echo $position; ?>][min]" min="1" value="1">
+                        <input type="text" name="syga_rating_input[<?php echo $position; ?>][min]" id="syga_rating_input[<?php echo $position; ?>][min]" min="1" value="<?php echo $rate['min']; ?>">
                     </td>
                     <td class="syga-field-max">
                         <label for="syga_rating_input[<?php echo $position; ?>][max]">
                             Valeur maximale
                         </label>
-                        <input type="text" name="syga_rating_input[<?php echo $position; ?>][max]" id="syga_rating_input[<?php echo $position; ?>][max]" min="2" value="10">
+                        <input type="text" name="syga_rating_input[<?php echo $position; ?>][max]" id="syga_rating_input[<?php echo $position; ?>][max]" min="2" value="<?php echo $rate['max']; ?>">
                     </td>
                 </tr>
-                <input type="hidden" name="syga_rating_input[<?php echo $position; ?>][values]" id="syga_rating_input[<?php echo $position; ?>][values]" value="syinit">
             </tbody>
         </table>
     </div>
