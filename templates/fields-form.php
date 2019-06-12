@@ -9,7 +9,7 @@
                 <tr>
                     <td colspan="2" class="syga-field-title">
                         <label for="syga_rating_input[<?php echo $position; ?>][title]">
-                            <?php echo $title; ?>
+                            Titre
                         </label>
                         <input type="text" name="syga_rating_input[<?php echo $position; ?>][title]" id="syga_rating_input[<?php echo $position; ?>][title]" value="<?php echo $rate['title']; ?>">
                     </td>
