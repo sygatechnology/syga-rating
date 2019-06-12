@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://sygatechnology.github.io/syga-rating/">
-    <img src="https://sygatechnology.github.io/syga-rating/assets/img/syga-rating-logo.png" alt="Syga Rating logo" height="72">
+    <img src="https://sygatechnology.github.io/syga-rating/assets/img/logo.png" alt="Syga Rating logo" height="72">
   </a>
 </p>
 <h3 align="center">Syga Rating</h3>
