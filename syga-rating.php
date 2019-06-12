@@ -84,7 +84,14 @@ class SygaRating
     /**
     * @var object $syhelpers
     */
-	private $syhelpers;
+    private $syhelpers;
+
+    /**
+    * @var array $syga_rating_cpt
+    */
+    private $syga_rating_cpt;
+    
+    
 
 	function __construct()
 	{
@@ -109,6 +116,12 @@ class SygaRating
             wp_die("L'objet class SYApi de l'extension Syga Rating n'existe pas dans le fichier syga-rating.php.", "Syga Rating plugin Error");
         }
 
+        if( $syga_rating_cpt = get_option( "syga_rating_cpt" ) ){
+            if( isset($syga_rating_cpt['slug']) && isset($syga_rating_cpt['name']) ) {
+                $this->syga_rating_cpt = $this->syhelpers->_unserialize( $syga_rating_cpt );
+            }
+        }
+
 		// vars
         $this->dir = plugins_url( '', __FILE__ );
         $this->url = plugin_dir_url( __FILE__ );
@@ -125,12 +138,23 @@ class SygaRating
     }
 
     function register_hooks(){
-        register_activation_hook( __FILE__, array($this, 'syga_rating_activate_flush_rewrite') );
+        register_activation_hook( __FILE__, array($this, 'syga_rating_set_core_options') );
         register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
     }
 
-	function syga_rating_activate_flush_rewrite()
+	function syga_rating_set_core_options()
 	{
+        $options = array(
+            "slug" => "",
+            "name" => "",
+            "singular_name" => "",
+            "menu_name" => "",
+            "menu_name" => "",
+            "supports" => array(),
+            "taxonomies" => array()
+        );
+        add_option( "syga_rating_cpt", $this->syhelpers->_serialize( $options ) );
+        add_option( "syga_rating_version", $this->version );
         add_action( 'admin_notices', 'syga_rating_settings_notice' );
 		flush_rewrite_rules();
     }
@@ -142,38 +166,42 @@ class SygaRating
     }
 
     function add_actions(){
-        add_action( 'init', array($this, 'syga_rating_register_post_types') );
+        
+        if( !empty($this->syga_rating_cpt) && !is_null($this->syga_rating_cpt) ) {
+            add_action( 'init', array($this, "syga_rating_register_post_types") );
+            add_action( 'wp_enqueue_scripts', array($this, 'syga_rating_iframe_frontend_enqueue'));
+            add_action( 'admin_init', array($this, 'syga_rating_backend_enqueue') );
+            add_action( 'admin_init', array($this, 'syga_rating_add_post_meta_boxes') );
+            add_action( 'save_post', array($this, 'save_syga_rating'), 10, 2 );
+            add_action( 'after_delete_post', array($this, 'delete_syga_rating'), 10, 1 );
+        }
         add_action( 'admin_menu', array($this, 'syga_rating_register_options_page') );
-        add_action( 'wp_enqueue_scripts', array($this, 'syga_rating_iframe_frontend_enqueue'));
-        add_action( 'admin_init', array($this, 'syga_rating_backend_enqueue') );
-        add_action( 'admin_init', array($this, 'syga_rating_add_post_meta_boxes') );
-        add_action( 'save_post', array($this, 'save_syga_rating'), 10, 3 );
-        add_action( 'after_delete_post', array($this, 'delete_syga_rating'), 10, 3 );
+        
     }
 
     function syga_rating_register_post_types(){
         $labels = array(
-            'name'                => _x( 'Syga Rating', 'Post Type General Name', 'sygarating' ),
-            'singular_name'       => _x( 'Syga Rating', 'Post Type Singular Name', 'sygarating' ),
-            'menu_name'           => __( 'Syga Rating', 'sygarating' ),
-            'parent_item_colon'   => __( 'Parent Syga Rating', 'sygarating' ),
-            'all_items'           => __( 'All Syga Rating', 'sygarating' ),
-            'view_item'           => __( 'View Syga Rating', 'sygarating' ),
-            'add_new_item'        => __( 'Add New Syga Rating', 'sygarating' ),
+            'name'                => _x( $this->syga_rating_cpt['name'], 'Post Type General Name', 'sygarating' ),
+            'singular_name'       => _x( $this->syga_rating_cpt['singular_name'], 'Post Type Singular Name', 'sygarating' ),
+            'menu_name'           => __( $this->syga_rating_cpt['menu_name'], 'sygarating' ),
+            'parent_item_colon'   => __( 'Parent '.$this->syga_rating_cpt['name'], 'sygarating' ),
+            'all_items'           => __( 'All '.$this->syga_rating_cpt['name'], 'sygarating' ),
+            'view_item'           => __( 'View '.$this->syga_rating_cpt['singular_name'], 'sygarating' ),
+            'add_new_item'        => __( 'Add New '.$this->syga_rating_cpt['singular_name'], 'sygarating' ),
             'add_new'             => __( 'Add New', 'sygarating' ),
-            'edit_item'           => __( 'Edit Syga Rating', 'sygarating' ),
-            'update_item'         => __( 'Update Syga Rating', 'sygarating' ),
-            'search_items'        => __( 'Search Syga Rating', 'sygarating' ),
+            'edit_item'           => __( 'Edit '.$this->syga_rating_cpt['singular_name'], 'sygarating' ),
+            'update_item'         => __( 'Update '.$this->syga_rating_cpt['singular_name'], 'sygarating' ),
+            'search_items'        => __( 'Search '.$this->syga_rating_cpt['singular_name'], 'sygarating' ),
             'not_found'           => __( 'Not Found', 'sygarating' ),
             'not_found_in_trash'  => __( 'Not found in Trash', 'sygarating' ),
         );
          
         $args = array(
-            'label'               => __( 'syga_rating', 'sygarating' ),
-            'description'         => __( 'Syga Rating news and reviews', 'sygarating' ),
+            'label'               => __( $this->syga_rating_cpt['slug'], 'sygarating' ),
+            'description'         => __( $this->syga_rating_cpt['name'].' news and reviews', 'sygarating' ),
             'labels'              => $labels,
-            'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'revisions' ),
-            'taxonomies'          => array( 'category', 'post_tag' ),
+            'supports'            => $this->syga_rating_cpt['supports'],
+            'taxonomies'          => $this->syga_rating_cpt['taxonomies'],
             'hierarchical'        => false,
             'public'              => true,
             'show_ui'             => true,
@@ -189,7 +217,7 @@ class SygaRating
             'menu_icon'           => 'dashicons-star-filled'
         );
 
-        register_post_type( 'syga_rating', $args );
+        register_post_type( $this->syga_rating_cpt['slug'], $args );
     }
 
     function syga_rating_register_options_page(){
@@ -197,8 +225,11 @@ class SygaRating
     }
 
     function syga_rating_options_page(){
+        $vars = array(
+            'syga_rating_cpt' => (array)$this->syga_rating_cpt
+        );
         echo $this->sytemplates->load(
-            plugin_dir_path( __FILE__ ) . 'templates/settings.php'
+            plugin_dir_path( __FILE__ ) . 'templates/settings.php', $vars
         );
     }
 
