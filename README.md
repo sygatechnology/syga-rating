@@ -21,7 +21,7 @@
 	syga_rating_content_frame(); 
 ?>
 ```
-Cette fonction l'affichera automatiquement si l'extension est activée, sinon rien n'affiche.
+Cette fonction l'affichera automatiquement si l'extension est activée, sinon rien ne s'affiche.
 ## Comment ça marche ##
 Fondamentalement, nous créons un nouveau type de poste appelé `syga_rating` qui n'accepte pas des postes parents ou enfants et lie des `champs personnalisés`, où nous stockons les votes et les avis des personnes (pour éviter les votes en double).
 <hr>
