@@ -13,6 +13,11 @@ if(!isset($syapi)){
     require_once plugin_dir_path( __FILE__ ) . '../inc/api.php';
 }
 
+global $syhelpers;
+if(!isset($syhelpers)){
+    require_once plugin_dir_path( __FILE__ ) . '../inc/helpers.php';
+}
+
 class SYTemplates
 {
     /**
@@ -97,7 +102,7 @@ class SYTemplates
         <input type="hidden" name="sygahiddenaction" value="<?php echo $action; ?>">
 <?php
             foreach($rates as $position => $rate){
-                echo $this->load( plugin_dir_path( __FILE__ ) . '../templates/edit-fields-form.php', array(
+                echo $this->load( plugin_dir_path( __FILE__ ) . '../templates/fields-form.php', array(
                     'position' => $position,
                     'rate' => $rate
                 ));
@@ -115,13 +120,13 @@ class SYTemplates
             return;
         }
         ob_start();
-        include( plugin_dir_path( __FILE__ ) . '../templates/edit-fields-form.php' );
+        include( plugin_dir_path( __FILE__ ) . '../templates/fields-form.php' );
         $buffer = ob_get_contents();
         @ob_end_clean();
         return $buffer;
     }
 
-    public function load_new_fields_form(){
+    public function load_new_fields_form( $caracteristic_label ){
         if(!is_admin()){
             return;
         }
@@ -129,8 +134,15 @@ class SYTemplates
         $response = new WP_Ajax_Response;
 
         $response->add( array(
-            'data'	=> $this->load(plugin_dir_path( __FILE__ ) . '../templates/new-fields-form.php', array(
-                'position' => $position
+            'data'	=> $this->load(plugin_dir_path( __FILE__ ) . '../templates/fields-form.php', array(
+                'position' => $_REQUEST['pos'],
+                'rate' => array(
+                    'title' => '',
+                    'min' => 1,
+                    'max' => 10,
+                    'values' => []
+                ),
+                'title' => $caracteristic_label
             ))
         ));
 
@@ -152,7 +164,7 @@ class SYTemplates
     }
 
     public function syga_rating_template( $post_id ){
-        global $post, $syapi;
+        global $post, $syapi, $syhelpers;
         $post = !isset( $post ) ? get_post( $post_id ) : $post;
 
         if ( empty($post) )
@@ -162,7 +174,8 @@ class SYTemplates
             $rates = $syapi->get_post_rates($post->ID);
             $vars = array(
                 'post_id' => $post->ID,
-                'rates' => $rates
+                'rates' => $rates,
+                'labels' => $syhelpers->_unserialize( get_option( "syga_rating_labels" ) )
             );
             return $this->load(plugin_dir_path( __FILE__ ) . '../templates/rating-template.php', $vars);
         }
@@ -171,13 +184,13 @@ class SYTemplates
     }
 
     public function syga_rating_reload_template($post){
-        global $syapi;
-            
+        global $syapi, $syhelpers;
         if($syapi->is_registered_post_type($post->post_type)){
             $rates = $syapi->get_post_rates($post->ID);
             $vars = array(
                 'post_id' => $post->ID,
-                'rates' => $rates
+                'rates' => $rates,
+                'labels' => $syhelpers->_unserialize( get_option( "syga_rating_labels" ) )
             );
             return $this->load(plugin_dir_path( __FILE__ ) . '../templates/rating-template-reload.php', $vars);
         }

@@ -3,15 +3,15 @@
         <div id="syga-rating-list-container" class="syga-rating-list-container">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Avis</h5>
+                    <h5><?php echo $labels['title']; ?></h5>
                 </div>
                 <div class="ibox-content">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Sujet</th>
-                                <th>Nombre d'avis</th>
-                                <th>Note moyenne</th>
+                                <th><?php echo $labels['caracteristic']; ?></th>
+                                <th><?php echo $labels['number']; ?></th>
+                                <th><?php echo $labels['average']; ?></th>
                                 <?php if(is_user_logged_in()) { ?>
                                     <th></th>
                                 <?php } ?>

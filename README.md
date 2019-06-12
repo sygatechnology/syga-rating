@@ -1,55 +1,28 @@
-=== Syga Rating ===
-Contributors: B.Clash
-Tags: rating, star, gasy
-Donate link: http://example.com/
-Requires at least: 4.0
-Tested up to: 4.8
-Requires PHP: >= 5.6
-Stable tag: 1.0
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+<p align="center">
+  <a href="https://sygatechnology.github.io/syga-rating/">
+    <img src="https://sygatechnology.github.io/syga-rating/assets/img/logo.png" alt="Syga Rating logo" height="72">
+  </a>
+</p>
+<h3 align="center">Syga Rating</h3>
+<p align="center">
+  Une extension de classement rapide pour WordPress
+</p>
+<hr>
+<br>
 
-Short description of this great plugin. No more than 150 characters, no markup.
+## Installation ## 
+1. Téléchargez le contenu du paquet zip dans le répertoire `/ wp-content / plugins /` 
+2. Activer l'extension via le menu "Extensions" de WordPress 
+3. Configurez l'extension selon vos besoins.
+4. Placez le fragment de code suivant où vous souhaitez que le tableau du résumé de la liste des classements par type apparaisse (normalement `single.php`,` content-single.php` ou `index.php`): 
 
-== Description ==
-Long description of this great plugin. No characters limit, and you can use markdown.
-
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-markdown parsed.
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-
-Titles are optional, naturally.
-
-Asterisks for *emphasis*.
-
-Double it up  for **strong**.
-
-== Installation ==
-1. Upload "syga-rating.php" to the "/wp-content/plugins/" directory.
-1. Activate the plugin through the "Plugins" menu in WordPress.
-1. Place "do_action( 'plugin_name_hook' );" in your templates.
-
-== Frequently Asked Questions ==
-= A question that someone might have =
-An answer to that question.
-
-= What about foo bar? =
-Answer to foo bar dilemma.
-
-== Screenshots ==
-1. The screenshot description corresponds to screenshot-1.(png|jpg|jpeg|gif).
-2. The screenshot description corresponds to screenshot-2.(png|jpg|jpeg|gif).
-3. The screenshot description corresponds to screenshot-3.(png|jpg|jpeg|gif).
+```php
+<?php 
+	syga_rating_content_frame(); 
+?>
+```
+Cette fonction l'affichera automatiquement si l'extension est activée, sinon rien ne s'affiche.
+## Comment ça marche ##
+Fondamentalement, nous créons un nouveau type de poste appelé `syga_rating` qui n'accepte pas des postes parents ou enfants et lie des `champs personnalisés`, où nous stockons les votes et les avis des personnes (pour éviter les votes en double).
+<hr>
+<a href="https://github.com/sygatechnology/">Syga Technology</a>

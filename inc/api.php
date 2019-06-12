@@ -31,7 +31,8 @@ class SYApi
             if( $action == 'new' ){
                 $input['values'] = [];
             } else if( $action == 'edit' ) {
-                $input['values'] = ( $input['values'] == 'syinit' ) ? [] : $this->syhelpers->_unserialize($input['values']);
+                $rate = $this->get_rate($post_id, $index);
+                $input['values'] = !is_null( $rate ) ? $rate['values'] : array();
             }
             $syga_rating_input_reindexed[$index] = $input;
         }
@@ -52,6 +53,11 @@ class SYApi
             $rates = [];
         }
         return $rates;
+    }
+
+    public function get_rate($post_id, $index){
+        $rates = $this->get_rates($post_id);
+        return isset( $rates[ $index ] ) ? $rates[ $index ] : NULL;
     }
 
     public function is_registered_post_type($post_type){
