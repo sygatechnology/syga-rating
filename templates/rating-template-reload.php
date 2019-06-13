@@ -6,7 +6,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th><?php echo $labels['caracteristic']; ?></th>
+                    <th><?php echo $labels['feature']; ?></th>
                     <th><?php echo $labels['number']; ?></th>
                     <th><?php echo $labels['average']; ?></th>
                     <?php if(is_user_logged_in()) { ?>

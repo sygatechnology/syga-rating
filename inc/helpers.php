@@ -122,10 +122,17 @@ if(!function_exists('syga_rating_content_frame')){
     }
 }
 
-if(!function_exists('syga_rating_template')){
-    function syga_rating_template( $post_id ){
+if(!function_exists('syga_rating_list')){
+    function syga_rating_list( $post_id ){
         global $sytemplates;
-        echo $sytemplates->syga_rating_template( $post_id );
+        echo $sytemplates->syga_rating_list( $post_id );
+    }
+}
+
+if(!function_exists('syga_rating_form')){
+    function syga_rating_form( $post_id, $index, $min, $max, $title ){
+        global $sytemplates;
+        echo $sytemplates->syga_rating_form( $post_id, $index, $min, $max, $title );
     }
 }
 

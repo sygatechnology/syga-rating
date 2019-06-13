@@ -65,9 +65,8 @@ class SYApi
     }
 
     public function is_registered_post_type($post_type){
-        // A vérifier si le type du poste est lié au système Syga Rating
-        // Mais pour le moment il n'est possible de la'afficher que sur un poste du type syga_rating
-        return ( $post_type == 'syga_rating' ) ? TRUE : FALSE;
+        $syga_rating_cpt = $this->syhelpers->_unserialize( get_option( "syga_rating_cpt" ) );
+        return ( $post_type == $syga_rating_cpt['slug'] ) ? TRUE : FALSE;
     }
 
     public function get_post_rates($post_id){

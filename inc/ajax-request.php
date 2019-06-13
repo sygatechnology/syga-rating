@@ -13,7 +13,7 @@
  */
 
     /** Load WordPress Bootstrap */
-    require_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/wp-load.php' );
+    require_once( dirname( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) ) . '/wp-load.php' );
 
     /** Allow for cross-domain requests (from the front end). */
     send_origin_headers();
@@ -47,12 +47,13 @@
             'max' => $_POST['max'],
             'title' => $_POST['title']
         );
-        echo $sytemplates->load( 'templates/syga-rating-comment-form.php', $vars );
+        echo $sytemplates->load( 'templates/syga-rating-ajax-comment-form.php', $vars );
     }
 
     if( $action == 'add-comment' ){
         $post = $syapi->add_user_note($_POST['post_id'], $_POST['index'], $_POST['note'], $_POST['comment']);
-        syga_rating_reload_template($post);
+        wp_redirect($_SERVER['HTTP_REFERER']);
+        die();
     }
 
 ?>

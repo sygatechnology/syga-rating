@@ -19,7 +19,12 @@
         $syra_labels = $syhelpers->_serialize( $syga_rating_labels );
         update_option( "syga_rating_cpt", $syra_cpt );
         update_option( "syga_rating_labels", $syra_labels );
+        if( !isset($_POST['syga_rating_enable_ajax']) ) {
+            $_POST['syga_rating_enable_ajax'] = "false";
+        }
+        update_option( "syga_rating_enable_ajax", $_POST['syga_rating_enable_ajax'] );
         $updated = TRUE;
+        unset($_POST);
     }
 
     screen_icon();
@@ -152,10 +157,10 @@
                     </tr>
                     <tr>
                         <th scope="row">
-                            <label for="syga_rating_labels_caracteristic">Caracteristiques du classement</label>
+                            <label for="syga_rating_labels_feature">Caracteristiques du classement</label>
                         </th>
                         <td>
-                            <input name="syga_rating_labels_caracteristic" type="text" required id="syga_rating_labels_caracteristic" value="<?php echo $syga_rating_labels['caracteristic']; ?>" class="regular-text ltr">
+                            <input name="syga_rating_labels_feature" type="text" required id="syga_rating_labels_feature" value="<?php echo $syga_rating_labels['feature']; ?>" class="regular-text ltr">
                         </td>
                     </tr>
                     <tr>
@@ -174,6 +179,27 @@
                             <input name="syga_rating_labels_average" type="text" required id="syga_rating_labels_average" value="<?php echo $syga_rating_labels['average']; ?>" class="regular-text ltr">
                         </td>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="welcome-panel">
+            <h2>Affichage public</h2>
+            <table class="form-table">
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            <label for="syga_rating_labels_title">Ajax formulaire</label>
+                        </th>
+                        <td>
+                            <fieldset class="metabox-prefs" id="syga_rating_enable_ajax">
+                                <label for="syga_rating_enable_ajax_input">
+                                    <input class="hide-postbox-tog" name="syga_rating_enable_ajax" type="checkbox" id="syga_rating_enable_ajax_input" value="true" <?php if($syga_rating_enable_ajax === "true") echo ' checked="checked"'; ?>>Activé
+                                </label>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    
                 </tbody>
             </table>
         </div>
