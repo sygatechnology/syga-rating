@@ -1,6 +1,5 @@
 <?php 
-<<<<<<< HEAD
-    
+
     $updated = FALSE;
     if( isset($_POST['actionhidden']) ) {
         $syga_rating_cpt = array();
@@ -23,13 +22,10 @@
         $updated = TRUE;
     }
 
-=======
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
     screen_icon();
     
 ?>
 <div class="wrap">
-<<<<<<< HEAD
     <form action="<?php echo admin_url( 'options-general.php?page=syga-rating' ); ?>" method="post">
         <input type="hidden" name="actionhidden" value="<?php echo $actionhidden; ?>">
         <h1>Configuration de Syga Rating</h1>
@@ -46,13 +42,6 @@
 
         <div class="welcome-panel">
             <h2>Options du type de poste personnalisé</h2>
-=======
-
-    <h1>Configuration de Syga Rating</h1>
-    <div class="welcome-panel">
-        <h2>Options du type de poste personnalisé</h2>
-        <form action="some-page.php" method="post">
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
             <table class="form-table">
                 <tbody>
                     <tr>
@@ -60,11 +49,7 @@
                             <label for="syga_rating_cpt_slug">Slug du type de poste personnalisé</label>
                         </th>
                         <td>
-<<<<<<< HEAD
                             <input name="syga_rating_cpt_slug" type="text" required id="syga_rating_cpt_slug" value="<?php if(isset($syga_rating_cpt['slug'])) echo $syga_rating_cpt['slug']; ?>" class="regular-text ltr">
-=======
-                            <input name="syga_rating_cpt_slug" type="text" require id="syga_rating_cpt_slug" value="<?php if(isset($syga_rating_cpt['slug'])) echo $syga_rating_cpt['slug']; ?>" class="regular-text ltr">
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
                             <br>
                             <i>Sans caractères spéciaux ni espace</i>
                         </td>
@@ -74,11 +59,7 @@
                             <label for="syga_rating_cpt_name">Nom du type de poste personnalisé (en pluriel)</label>
                         </th>
                         <td>
-<<<<<<< HEAD
                             <input name="syga_rating_cpt_name" type="text" required id="syga_rating_cpt_name" value="<?php if(isset($syga_rating_cpt['name'])) echo $syga_rating_cpt['name']; ?>" class="regular-text ltr">
-=======
-                            <input name="syga_rating_cpt_name" type="text" require id="syga_rating_cpt_name" value="<?php if(isset($syga_rating_cpt['name'])) echo $syga_rating_cpt['name']; ?>" class="regular-text ltr">
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
                         </td>
                     </tr>
                     <tr>
@@ -86,11 +67,7 @@
                             <label for="syga_rating_cpt_singular_name">Nom du type de poste personnalisé (en singulier)</label>
                         </th>
                         <td>
-<<<<<<< HEAD
                             <input name="syga_rating_cpt_singular_name" type="text" required id="syga_rating_cpt_singular_name" value="<?php if(isset($syga_rating_cpt['singular_name'])) echo $syga_rating_cpt['singular_name']; ?>" class="regular-text ltr">
-=======
-                            <input name="syga_rating_cpt_singular_name" type="text" require id="syga_rating_cpt_singular_name" value="<?php if(isset($syga_rating_cpt['singular_name'])) echo $syga_rating_cpt['singular_name']; ?>" class="regular-text ltr">
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
                         </td>
                     </tr>
                     <tr>
@@ -98,11 +75,7 @@
                             <label for="syga_rating_cpt_menu_name">Nom pour le menu</label>
                         </th>
                         <td>
-<<<<<<< HEAD
                             <input name="syga_rating_cpt_menu_name" type="text" required id="syga_rating_cpt_menu_name" value="<?php if(isset($syga_rating_cpt['menu_name'])) echo $syga_rating_cpt['menu_name']; ?>" class="regular-text ltr">
-=======
-                            <input name="syga_rating_cpt_menu_name" type="text" require id="syga_rating_cpt_menu_name" value="<?php if(isset($syga_rating_cpt['menu_name'])) echo $syga_rating_cpt['menu_name']; ?>" class="regular-text ltr">
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
                         </td>
                     </tr>
                     <tr>
@@ -114,7 +87,6 @@
                             <fieldset class="metabox-prefs" id="syga_rating_cpt_supports">
 
                                 <label for="supports-title">
-<<<<<<< HEAD
                                     <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-title" value="title" <?php if(in_array('title', $syga_rating_cpt['supports'])) echo ' checked="checked"'; ?>>Titre
                                 </label>
                                 <label for="supports-editor">
@@ -134,27 +106,6 @@
                                 </label>
                                 <label for="supports-author">
                                     <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-author" value="author" <?php if(in_array('author', $syga_rating_cpt['supports'])) echo ' checked="checked"'; ?>>Auteur
-=======
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-title" value="title" <?php if(isset($syga_rating_cpt['supports']['title'])) echo ' checked="checked"'; ?>>Titre
-                                </label>
-                                <label for="supports-editor">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-editor" value="editor" <?php if(isset($syga_rating_cpt['supports']['editor'])) echo ' checked="checked"'; ?>>Editeur
-                                </label>
-                                <label for="supports-excerpt">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-excerpt" value="excerpt" <?php if(isset($syga_rating_cpt['supports']['excerpt'])) echo ' checked="checked"'; ?>>Extrait
-                                </label>
-                                <label for="supports-thumbnail">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-thumbnail" value="thumbnail" <?php if(isset($syga_rating_cpt['supports']['thumbnail'])) echo ' checked="checked"'; ?>>Image mise en avant
-                                </label>
-                                <label for="supports-comments">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-comments" value="comments" <?php if(isset($syga_rating_cpt['supports']['comments'])) echo ' checked="checked"'; ?>>Commentaires
-                                </label>
-                                <label for="supports-revisions">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-revisions" value="revisions" <?php if(isset($syga_rating_cpt['supports']['revisions'])) echo ' checked="checked"'; ?>>Revisions
-                                </label>
-                                <label for="supports-author">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-author" value="author" <?php if(isset($syga_rating_cpt['supports']['author'])) echo ' checked="checked"'; ?>>Auteur
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
                                 </label>
                                 
                             </fieldset>
@@ -176,11 +127,7 @@
                                         }
                                 ?>
                                         <label for="taxonomies-<?php echo $taxonomy->name; ?>">
-<<<<<<< HEAD
                                             <input class="hide-postbox-tog" name="syga_rating_cpt_taxonomies[]" type="checkbox" id="taxonomies-<?php echo $taxonomy->name; ?>" value="<?php echo $taxonomy->name; ?>" <?php echo $checked; ?>><?php echo $taxonomy->label; ?>
-=======
-                                            <input class="hide-postbox-tog" name="syga_rating_cpt_taxonomies[]" type="checkbox" id="taxonomies-<?php echo $taxonomy->name; ?>" value="title" <?php echo $checked; ?>><?php echo $taxonomy->label; ?>
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
                                         </label>
                                 <?php } } ?>
                             </fieldset>
@@ -189,7 +136,6 @@
                     </tr>
                 </tbody>
             </table>
-<<<<<<< HEAD
         </div>
 
         <div class="welcome-panel">
@@ -236,13 +182,4 @@
             <button type="submit" class="button-primary">Mettre à jour</button>
         </p>
     </form>
-=======
-
-            <p class="submit">
-                <input type="submit" value="Mettre à jour" class="button-primary" name="update">
-            </p>
-        </form>
-    </div>
-
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
 </div>
