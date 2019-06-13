@@ -25,6 +25,10 @@ class SYApi
         }
     }
 
+    public function register_core_options(){
+        add_option( 'my_plugin_activated', time() );
+    }
+
     public function save_rates($post_id, $rates, $action){
         $syga_rating_input_reindexed = [];
         foreach($rates as $index => $input){

@@ -90,7 +90,6 @@ class SygaRating
     * @var array $syga_rating_cpt
     */
     private $syga_rating_cpt;
-<<<<<<< HEAD
 
     /**
     * @var array $syga_rating_labels
@@ -101,9 +100,6 @@ class SygaRating
     * @var string $action_hidden
     */
     private $action_hidden = "first";
-=======
-    
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
     
 
 	function __construct()
@@ -128,9 +124,6 @@ class SygaRating
         } else {
             wp_die("L'objet class SYApi de l'extension Syga Rating n'existe pas dans le fichier syga-rating.php.", "Syga Rating plugin Error");
         }
-<<<<<<< HEAD
-        
-=======
 
         if( $syga_rating_cpt = get_option( "syga_rating_cpt" ) ){
             if( isset($syga_rating_cpt['slug']) && isset($syga_rating_cpt['name']) ) {
@@ -138,7 +131,6 @@ class SygaRating
             }
         }
 
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
 		// vars
         $this->dir = plugins_url( '', __FILE__ );
         $this->url = plugin_dir_url( __FILE__ );
@@ -151,10 +143,8 @@ class SygaRating
     function init(){
         $syga_rating_cpt = get_option( "syga_rating_cpt" );
         if( $syga_rating_cpt ){
-            //if( isset($syga_rating_cpt['slug']) && isset($syga_rating_cpt['name']) ) {
-                $this->syga_rating_cpt = $this->syhelpers->_unserialize( $syga_rating_cpt );
-                $this->action_hidden = "update";
-            //}
+            $this->syga_rating_cpt = $this->syhelpers->_unserialize( $syga_rating_cpt );
+            $this->action_hidden = "update";
         }
         
         $syga_rating_labels = get_option( "syga_rating_labels" );
@@ -173,11 +163,7 @@ class SygaRating
 
 	function syga_rating_set_core_options()
 	{
-<<<<<<< HEAD
         $cpt_options = array(
-=======
-        $options = array(
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
             "slug" => "",
             "name" => "",
             "singular_name" => "",
@@ -186,7 +172,6 @@ class SygaRating
             "supports" => array(),
             "taxonomies" => array()
         );
-<<<<<<< HEAD
         $labels_options = array(
             "title" => "",
             "caracteristic" => "",
@@ -199,19 +184,6 @@ class SygaRating
         flush_rewrite_rules();
     }
 
-=======
-        add_option( "syga_rating_cpt", $this->syhelpers->_serialize( $options ) );
-        add_option( "syga_rating_version", $this->version );
-        add_action( 'admin_notices', 'syga_rating_settings_notice' );
-		flush_rewrite_rules();
-    }
-
-    function syga_rating_settings_notice(){
-        echo $this->sytemplates->load(
-            plugin_dir_path( __FILE__ ) . 'templates/settings-notice.php'
-        );
-    }
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
 
     function add_actions(){
         
@@ -274,13 +246,9 @@ class SygaRating
 
     function syga_rating_options_page(){
         $vars = array(
-<<<<<<< HEAD
             'syga_rating_cpt' => (array)$this->syga_rating_cpt,
             'syga_rating_labels' => (array)$this->syga_rating_labels,
             'actionhidden' => $this->action_hidden
-=======
-            'syga_rating_cpt' => (array)$this->syga_rating_cpt
->>>>>>> ba9dc10c2cee0f45fe1708a6ab543da56c30d863
         );
         echo $this->sytemplates->load(
             plugin_dir_path( __FILE__ ) . 'templates/settings.php', $vars
