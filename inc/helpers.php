@@ -136,9 +136,27 @@ if(!function_exists('syga_rating_form')){
     }
 }
 
+// Deprecated
 if(!function_exists('syga_rating_reload_template')){
     function syga_rating_reload_template( $post ){
         global $sytemplates;
         echo $sytemplates->syga_rating_reload_template( $post );
+    }
+}
+
+if(!function_exists('syga_rating_display_options')){
+    function syga_rating_display_options( $active_tab, $vars ){
+        global $sytemplates;
+        $tabs = array(
+            "tax-cfg" => "options/taxonomy.php",
+            "labels" => "options/labels.php",
+            "cpt-cfg" => "options/post-type.php"
+        );
+        if( isset( $tabs[ $active_tab ] ) ) {
+            echo $sytemplates->syga_rating_display_options_template( $tabs[ $active_tab ], $vars );
+        } else {
+            wp_die( "Cette page n'existe pas", "Syga Rating Error", 404 );
+        }
+        
     }
 }

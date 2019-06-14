@@ -1,10 +1,15 @@
 <?php 
 
     $updated = FALSE;
-    if( isset($_POST['actionhidden']) ) {
+    if( isset($_POST['actionhidden']) && isset($_POST['tab']) ) {
+        $syga_rating_tax = array();
         $syga_rating_cpt = array();
         $syga_rating_labels = array();
         foreach($_POST as $key => $value){
+            $tax_segment = explode("syga_rating_tax_", $key);
+            if( count( $tax_segment ) === 2 ){
+                $syga_rating_tax[$tax_segment[1]] = $value;
+            }
             $cpt_segment = explode("syga_rating_cpt_", $key);
             if( count( $cpt_segment ) === 2 ){
                 $syga_rating_cpt[$cpt_segment[1]] = $value;
@@ -15,25 +20,51 @@
             }
         }
         global $syhelpers;
-        $syra_cpt = $syhelpers->_serialize( $syga_rating_cpt );
-        $syra_labels = $syhelpers->_serialize( $syga_rating_labels );
-        update_option( "syga_rating_cpt", $syra_cpt );
-        update_option( "syga_rating_labels", $syra_labels );
-        if( !isset($_POST['syga_rating_enable_ajax']) ) {
-            $_POST['syga_rating_enable_ajax'] = "false";
+
+        if( $_POST['tab'] == 'tax-cfg' ) {
+            $syra_tax = $syhelpers->_serialize( $syga_rating_tax );
+            update_option( "syga_rating_tax", $syra_tax );
         }
-        update_option( "syga_rating_enable_ajax", $_POST['syga_rating_enable_ajax'] );
+
+        if( $_POST['tab'] == 'labels' ) {
+            $syra_cpt = $syhelpers->_serialize( $syga_rating_cpt );
+            update_option( "syga_rating_cpt", $syra_cpt );
+        }
+
+        if( $_POST['tab'] == 'cpt-cfg' ) {
+            update_option( "syga_rating_labels", $syra_labels );
+            $syra_labels = $syhelpers->_serialize( $syga_rating_labels );
+            if( !isset($_POST['syga_rating_enable_ajax']) ) {
+                $_POST['syga_rating_enable_ajax'] = "false";
+            }
+            update_option( "syga_rating_enable_ajax", $_POST['syga_rating_enable_ajax'] );
+        }
+
         $updated = TRUE;
         unset($_POST);
     }
 
     screen_icon();
-    
+
+    $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'tax-cfg';
+
 ?>
 <div class="wrap">
-    <form action="<?php echo admin_url( 'options-general.php?page=syga-rating' ); ?>" method="post">
+
+    <div id="icon-themes" class="icon32"></div>
+
+    <h1>Configuration de Syga Rating</h1>
+
+        <h2 class="nav-tab-wrapper">
+            <a href="?page=syga-rating&tab=tax-cfg" class="nav-tab <?php echo $active_tab == 'tax-cfg' ? 'nav-tab-active' : ''; ?>">Options de taxonomie personnalisée</a>
+            <a href="<?php echo ( isset($syga_rating_tax['slug']) && $syga_rating_tax['slug'] !== '' ) ? '?page=syga-rating&tab=labels' : 'javascript:void(0)';  ?>" class="nav-tab <?php echo $active_tab == 'labels' ? 'nav-tab-active' : ''; ?>">Libellés</a>
+            <a href="<?php echo ( isset($syga_rating_tax['slug']) && $syga_rating_tax['slug'] !== '' ) ? '?page=syga-rating&tab=cpt-cfg' : 'javascript:void(0)';  ?>" class="nav-tab <?php echo $active_tab == 'cpt-cfg' ? 'nav-tab-active' : ''; ?>">Options de type de post personnalisé</a>
+        </h2>
+
+    <form action="<?php echo plugins_url( 'inc/request.php', dirname( __FILE__ ) ); ?>" method="post">
         <input type="hidden" name="actionhidden" value="<?php echo $actionhidden; ?>">
-        <h1>Configuration de Syga Rating</h1>
+        <input type="hidden" name="tab" value="<?php echo $active_tab; ?>">
+        
         <?php if( $updated ){ ?>
             <div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible"> 
                 <p>
@@ -45,164 +76,13 @@
             </div>
         <?php } ?>
 
-        <div class="welcome-panel">
-            <h2>Options du type de poste personnalisé</h2>
-            <table class="form-table">
-                <tbody>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_cpt_slug">Slug du type de poste personnalisé</label>
-                        </th>
-                        <td>
-                            <input name="syga_rating_cpt_slug" type="text" required id="syga_rating_cpt_slug" value="<?php if(isset($syga_rating_cpt['slug'])) echo $syga_rating_cpt['slug']; ?>" class="regular-text ltr">
-                            <br>
-                            <i>Sans caractères spéciaux ni espace</i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_cpt_name">Nom du type de poste personnalisé (en pluriel)</label>
-                        </th>
-                        <td>
-                            <input name="syga_rating_cpt_name" type="text" required id="syga_rating_cpt_name" value="<?php if(isset($syga_rating_cpt['name'])) echo $syga_rating_cpt['name']; ?>" class="regular-text ltr">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_cpt_singular_name">Nom du type de poste personnalisé (en singulier)</label>
-                        </th>
-                        <td>
-                            <input name="syga_rating_cpt_singular_name" type="text" required id="syga_rating_cpt_singular_name" value="<?php if(isset($syga_rating_cpt['singular_name'])) echo $syga_rating_cpt['singular_name']; ?>" class="regular-text ltr">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_cpt_menu_name">Nom pour le menu</label>
-                        </th>
-                        <td>
-                            <input name="syga_rating_cpt_menu_name" type="text" required id="syga_rating_cpt_menu_name" value="<?php if(isset($syga_rating_cpt['menu_name'])) echo $syga_rating_cpt['menu_name']; ?>" class="regular-text ltr">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_cpt_supports">Supports</label>
-                        </th>
-                        <td>
-
-                            <fieldset class="metabox-prefs" id="syga_rating_cpt_supports">
-
-                                <label for="supports-title">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-title" value="title" <?php if(in_array('title', $syga_rating_cpt['supports'])) echo ' checked="checked"'; ?>>Titre
-                                </label>
-                                <label for="supports-editor">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-editor" value="editor" <?php if(in_array('editor', $syga_rating_cpt['supports'])) echo ' checked="checked"'; ?>>Editeur
-                                </label>
-                                <label for="supports-excerpt">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-excerpt" value="excerpt" <?php if(in_array('excerpt', $syga_rating_cpt['supports'])) echo ' checked="checked"'; ?>>Extrait
-                                </label>
-                                <label for="supports-thumbnail">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-thumbnail" value="thumbnail" <?php if(in_array('thumbnail', $syga_rating_cpt['supports'])) echo ' checked="checked"'; ?>>Image mise en avant
-                                </label>
-                                <label for="supports-comments">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-comments" value="comments" <?php if(in_array('comments', $syga_rating_cpt['supports'])) echo ' checked="checked"'; ?>>Commentaires
-                                </label>
-                                <label for="supports-revisions">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-revisions" value="revisions" <?php if(in_array('revisions', $syga_rating_cpt['supports'])) echo ' checked="checked"'; ?>>Revisions
-                                </label>
-                                <label for="supports-author">
-                                    <input class="hide-postbox-tog" name="syga_rating_cpt_supports[]" type="checkbox" id="supports-author" value="author" <?php if(in_array('author', $syga_rating_cpt['supports'])) echo ' checked="checked"'; ?>>Auteur
-                                </label>
-                                
-                            </fieldset>
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_cpt_taxonomies">Taxonomies liées</label>
-                        </th>
-                        <td>
-
-                            <fieldset class="metabox-prefs" id="syga_rating_cpt_taxonomies">
-                                <?php foreach( get_taxonomies('', 'objects') as $taxonomy ){
-                                    if( $taxonomy->name != 'nav_menu' && $taxonomy->name != 'link_category' && $taxonomy->name != 'post_format' ){
-                                        $checked = '';
-                                        if( isset($syga_rating_cpt['taxonomies']) && in_array($taxonomy->name, $syga_rating_cpt['taxonomies']) ) {
-                                                $checked = 'checked="checked"';
-                                        }
-                                ?>
-                                        <label for="taxonomies-<?php echo $taxonomy->name; ?>">
-                                            <input class="hide-postbox-tog" name="syga_rating_cpt_taxonomies[]" type="checkbox" id="taxonomies-<?php echo $taxonomy->name; ?>" value="<?php echo $taxonomy->name; ?>" <?php echo $checked; ?>><?php echo $taxonomy->label; ?>
-                                        </label>
-                                <?php } } ?>
-                            </fieldset>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="welcome-panel">
-            <h2>Libellés</h2>
-            <table class="form-table">
-                <tbody>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_labels_title">Titre du classement</label>
-                        </th>
-                        <td>
-                            <input name="syga_rating_labels_title" type="text" required id="syga_rating_labels_title" value="<?php echo $syga_rating_labels['title']; ?>" class="regular-text ltr">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_labels_feature">Caracteristiques du classement</label>
-                        </th>
-                        <td>
-                            <input name="syga_rating_labels_feature" type="text" required id="syga_rating_labels_feature" value="<?php echo $syga_rating_labels['feature']; ?>" class="regular-text ltr">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_labels_number">Nombre de votes</label>
-                        </th>
-                        <td>
-                            <input name="syga_rating_labels_number" type="text" required id="syga_rating_labels_number" value="<?php echo $syga_rating_labels['number']; ?>" class="regular-text ltr">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_labels_average">Moyenne des votes</label>
-                        </th>
-                        <td>
-                            <input name="syga_rating_labels_average" type="text" required id="syga_rating_labels_average" value="<?php echo $syga_rating_labels['average']; ?>" class="regular-text ltr">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="welcome-panel">
-            <h2>Affichage public</h2>
-            <table class="form-table">
-                <tbody>
-                    <tr>
-                        <th scope="row">
-                            <label for="syga_rating_labels_title">Ajax formulaire</label>
-                        </th>
-                        <td>
-                            <fieldset class="metabox-prefs" id="syga_rating_enable_ajax">
-                                <label for="syga_rating_enable_ajax_input">
-                                    <input class="hide-postbox-tog" name="syga_rating_enable_ajax" type="checkbox" id="syga_rating_enable_ajax_input" value="true" <?php if($syga_rating_enable_ajax === "true") echo ' checked="checked"'; ?>>Activé
-                                </label>
-                            </fieldset>
-                        </td>
-                    </tr>
-                    
-                </tbody>
-            </table>
-        </div>
+        <?php 
+            syga_rating_display_options( $active_tab, array(
+                "syga_rating_tax" => $syga_rating_tax,
+                "syga_rating_cpt" => $syga_rating_cpt,
+                "syga_rating_labels" => $syga_rating_labels
+            ));
+        ?>
 
         <p class="submit">
             <button type="submit" class="button-primary">Mettre à jour</button>

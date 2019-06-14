@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Syga Rating
- * Plugin URI:  https://github.com/sygatechnology/syga-rating
+ * Plugin URI:  https://sygatechnology.github.io/syga-rating
  * Description: Système de classement des articles ou autres
  * Version:     1.0.0
  * Author:      B.Clash
@@ -87,6 +87,11 @@ class SygaRating
     private $syhelpers;
 
     /**
+    * @var array $syga_rating_tax
+    */
+    private $syga_rating_tax;
+
+    /**
     * @var array $syga_rating_cpt
     */
     private $syga_rating_cpt;
@@ -147,6 +152,12 @@ class SygaRating
     }
 
     protected function load_core_options(){
+
+        $syga_rating_tax = get_option( "syga_rating_tax" );
+        if( $syga_rating_tax ){
+            $this->syga_rating_tax = $this->syhelpers->_unserialize( $syga_rating_tax );
+        }
+
         $syga_rating_cpt = get_option( "syga_rating_cpt" );
         if( $syga_rating_cpt ){
             $this->syga_rating_cpt = $this->syhelpers->_unserialize( $syga_rating_cpt );
@@ -168,11 +179,18 @@ class SygaRating
 
 	function syga_rating_set_core_options()
 	{
-        $cpt_options = array(
+        $tax_options = array(
             "slug" => "",
             "name" => "",
             "singular_name" => "",
             "menu_name" => "",
+            "post_types" => array()
+        );
+
+        $cpt_options = array(
+            "slug" => "",
+            "name" => "",
+            "singular_name" => "",
             "menu_name" => "",
             "supports" => array(),
             "taxonomies" => array()
@@ -183,12 +201,13 @@ class SygaRating
             "number" => "",
             "average" => ""
         );
+        add_option( "syga_rating_tax", $this->syhelpers->_serialize( $tax_options ) );
         add_option( "syga_rating_cpt", $this->syhelpers->_serialize( $cpt_options ) );
         add_option( "syga_rating_labels", $this->syhelpers->_serialize( $labels_options ) );
         add_option( "syga_rating_enable_ajax", "true" );
         add_option( "syga_rating_version", $this->version );
-        add_option( "_syga_rating_activation_redirect", TRUE );
         flush_rewrite_rules();
+        add_option( "_syga_rating_activation_redirect", TRUE );
     }
 
     function syga_rating_activation_redirect() {
@@ -201,8 +220,14 @@ class SygaRating
 
     function add_actions(){
         
-        if( $this->syga_rating_cpt ) {
-            add_action( 'init', array($this, "syga_rating_register_post_types") );
+        if( $this->syga_rating_tax && isset( $this->syga_rating_tax['slug'] ) && $this->syga_rating_tax['slug'] !== '' ) {
+
+            add_action( 'init', array($this, "syga_rating_register_taxonomy"), 0 );
+
+            if( $this->syga_rating_cpt && isset( $this->syga_rating_cpt['slug'] ) && $this->syga_rating_cpt['slug'] !== '' ) {
+                add_action( 'init', array($this, "syga_rating_register_post_types"), 0 );
+            }
+
             add_action( 'wp_enqueue_scripts', array($this, 'syga_rating_iframe_frontend_enqueue'));
             add_action( 'admin_init', array($this, 'syga_rating_backend_enqueue') );
             add_action( 'admin_init', array($this, 'syga_rating_add_post_meta_boxes') );
@@ -213,7 +238,32 @@ class SygaRating
         add_action( 'admin_init', array( $this, 'syga_rating_activation_redirect') );
     }
 
-    function syga_rating_register_post_types(){
+    protected function syga_rating_register_taxonomy(){
+        $labels = array(
+            'name' => _x( $this->syga_rating_tax['name'], 'taxonomy general name' ),
+            'singular_name' => _x( $this->syga_rating_tax['singular_name'], 'taxonomy singular name' ),
+            'search_items' =>__( 'Search '.$this->syga_rating_tax['name'] ),
+            'all_items' => __( 'All '.$this->syga_rating_tax['name'] ),
+            'parent_item' => __( 'Parent '.$this->syga_rating_tax['singular_name'] ),
+            'parent_item_colon' => __( 'Parent '.$this->syga_rating_tax['singular_name'].':' ),
+            'edit_item' => __( 'Edit '.$this->syga_rating_tax['singular_name'] ),
+            'update_item' => __( 'Update '.$this->syga_rating_tax['singular_name'] ),
+            'add_new_item' => __( 'Add New '.$this->syga_rating_tax['singular_name'] ),
+            'new_item_name' => __( 'New '.$this->syga_rating_tax['singular_name'].' Name' ),
+            'menu_name' => __( $this->syga_rating_tax['manu_name'] ),
+          );
+
+          register_taxonomy('topics', $this->syga_rating_tax['post_types'], array(
+            'hierarchical' => true,
+            'labels' => $labels,
+            'show_ui' => true,
+            'show_admin_column' => true,
+            'query_var' => true,
+            'rewrite' => array( 'slug' => $this->syga_rating_tax['slug'] )
+          ));
+    }
+
+    protected function syga_rating_register_post_types(){
         $labels = array(
             'name'                => _x( $this->syga_rating_cpt['name'], 'Post Type General Name', 'sygarating' ),
             'singular_name'       => _x( $this->syga_rating_cpt['singular_name'], 'Post Type Singular Name', 'sygarating' ),

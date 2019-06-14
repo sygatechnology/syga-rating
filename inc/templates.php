@@ -195,6 +195,7 @@ class SYTemplates
 
     }
 
+    //Deprecated
     public function syga_rating_reload_template($post){
         global $syapi, $syhelpers;
         $rates = $syapi->get_post_rates($post->ID);
@@ -204,6 +205,10 @@ class SYTemplates
             'labels' => $syhelpers->_unserialize( get_option( "syga_rating_labels" ) )
         );
         return $this->load(plugin_dir_path( dirname( __FILE__ ) ) . 'templates/rating-template-reload.php', $vars);
+    }
+
+    public function syga_rating_display_options_template( $template, $vars ){
+        return $this->load(plugin_dir_path( dirname( __FILE__ ) ) . 'templates/'.$template, $vars);
     }
 
 }
