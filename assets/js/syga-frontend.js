@@ -1,11 +1,11 @@
-$( document ).ready(function(){
+/* $( document ).ready(function(){
 	set_iframe_height();
 });
 
 function set_iframe_height(){
 	var rating_list_container_height = $( '#syga-rating-list-container').height();
 	$( $( window )[0].frameElement ).css( 'height', rating_list_container_height-36 );
-}
+} */
 
 function syga_load_comment_form(post_id, index){
 	var element = $( '#syga-rate-'+index );

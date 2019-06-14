@@ -160,8 +160,8 @@ class SYTemplates
 
     public function syga_rating_frame( $attr_class = '' ){
         global $post, $syapi;
-        if($syapi->is_registered_post_type($post->post_type)){
-            return '<iframe width="100%" style="min-height: 137px;" id="syga-rating-frame" class="'.$attr_class.'" src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'templates/syga-rating-content.php?post_id='.$post->ID.'&action=list" frameborder="0"></iframe>';
+        if( $syapi->is_registered_post_type($post->post_type) ){
+            return '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" id="syga-rating-frame" class="'.$attr_class.'" src="' . plugin_dir_url( dirname( __FILE__ ) ) . 'templates/syga-rating-content.php?post_id='.$post->ID.'&action=list" allowfullscreen></iframe></div>';
         }
     }
 
